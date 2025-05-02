@@ -221,6 +221,30 @@ return {
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        ruff = {
+          cmd = { 'ruff', 'server' },
+          settings = {
+            fixAll = true,
+            organizeImports = true,
+            lint = { enable = true },
+          },
+        },
+
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              disableOrganizeImports = true,
+            },
+            typeCheckingMode = 'standard',
+            python = {
+              -- pythonPath = vim.fn.trim(vim.fn.system 'pixi run which python'),
+              analysis = {
+                -- Ignore all files for analysis to exclusively use Ruff for linting
+                ignore = { '*' },
+              },
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = { ... },
