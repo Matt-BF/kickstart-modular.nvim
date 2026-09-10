@@ -264,6 +264,15 @@ return {
         },
       }
 
+      -- mason-lspconfig v2 auto-enables servers from nvim-lspconfig's default
+      -- configs, so the `servers` table above is not applied; overrides must
+      -- go through vim.lsp.config.
+      -- pyrefly traces every LSP event to stderr, which nvim logs to lsp.log
+      -- (~9 MB/day). The LSP itself runs over stdout, so silence stderr.
+      vim.lsp.config('pyrefly', {
+        cmd = { 'sh', '-c', 'exec pyrefly lsp 2>/dev/null' },
+      })
+
       -- Ensure the servers and tools above are installed
       --
       -- To check the current status of installed tools and/or manually install

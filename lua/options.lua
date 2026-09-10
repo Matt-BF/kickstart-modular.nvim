@@ -29,18 +29,6 @@ vim.opt.breakindent = true
 -- Save undo history
 vim.opt.undofile = true
 
--- On JGI machines pyrefly floods the LSP log with stderr on every message
--- (~9 MB/day), and each write hits NFS (~12 ms). Keep just the log on local
--- disk; undo, swap, and shada stay in the default state dir for durability.
--- _set_filename is a private API (added in nvim 0.12), guarded for other versions.
-if vim.fn.hostname():match 'jgi$' then
-  local log_dir = ('/tmp/%s/nvim'):format(os.getenv('USER') or 'nvim')
-  vim.fn.mkdir(log_dir, 'p')
-  if vim.lsp.log and vim.lsp.log._set_filename then
-    vim.lsp.log._set_filename(log_dir .. '/lsp.log')
-  end
-end
-
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
