@@ -29,22 +29,15 @@ vim.opt.breakindent = true
 -- Save undo history
 vim.opt.undofile = true
 
--- On JGI machines home is NFS (~12 ms per write), so keep volatile state
--- (undo, swap, shada, LSP log) on local /tmp instead.
--- Caveat: /tmp is node-local and may be wiped on reboot.
+-- On JGI machines pyrefly floods the LSP log with stderr on every message
+-- (~9 MB/day), and each write hits NFS (~12 ms). Keep just the log on local
+-- disk; undo, swap, and shada stay in the default state dir for durability.
+-- _set_filename is a private API (added in nvim 0.12), guarded for other versions.
 if vim.fn.hostname():match 'jgi$' then
-  local nvim_tmp = ('/tmp/%s/nvim'):format(os.getenv('USER') or 'nvim')
-  for _, dir in ipairs { nvim_tmp, nvim_tmp .. '/undo', nvim_tmp .. '/swap', nvim_tmp .. '/backup', nvim_tmp .. '/shada' } do
-    vim.fn.mkdir(dir, 'p')
-  end
-  vim.opt.undodir = nvim_tmp .. '/undo//'
-  vim.opt.directory = nvim_tmp .. '/swap//'
-  vim.opt.backupdir = nvim_tmp .. '/backup//'
-  vim.opt.shadafile = nvim_tmp .. '/shada/main.shada'
-  -- The LSP log receives pyrefly's stderr on every message; keep it off NFS.
-  -- _set_filename is a private API (added in nvim 0.12), guarded for other versions.
+  local log_dir = ('/tmp/%s/nvim'):format(os.getenv('USER') or 'nvim')
+  vim.fn.mkdir(log_dir, 'p')
   if vim.lsp.log and vim.lsp.log._set_filename then
-    vim.lsp.log._set_filename(nvim_tmp .. '/lsp.log')
+    vim.lsp.log._set_filename(log_dir .. '/lsp.log')
   end
 end
 
