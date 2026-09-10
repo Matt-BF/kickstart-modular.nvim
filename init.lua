@@ -107,3 +107,11 @@ require 'lazy-plugins'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Set skeletons
+vim.api.nvim_create_augroup('skeletons', { clear = true })
+vim.api.nvim_create_autocmd('BufNewFile', {
+  group = 'skeletons',
+  pattern = '*.slurm.sh',
+  command = 'silent! execute "0r ~/.vim/templates/skeleton.slurm.sh"'
+})

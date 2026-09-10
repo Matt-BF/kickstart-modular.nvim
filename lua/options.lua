@@ -29,6 +29,25 @@ vim.opt.breakindent = true
 -- Save undo history
 vim.opt.undofile = true
 
+-- On JGI machines home is NFS (~12 ms per write), so keep volatile state
+-- (undo, swap, shada, LSP log) on local /tmp instead.
+-- Caveat: /tmp is node-local and may be wiped on reboot.
+if vim.fn.hostname():match 'jgi$' then
+  local nvim_tmp = ('/tmp/%s/nvim'):format(os.getenv('USER') or 'nvim')
+  for _, dir in ipairs { nvim_tmp, nvim_tmp .. '/undo', nvim_tmp .. '/swap', nvim_tmp .. '/backup', nvim_tmp .. '/shada' } do
+    vim.fn.mkdir(dir, 'p')
+  end
+  vim.opt.undodir = nvim_tmp .. '/undo//'
+  vim.opt.directory = nvim_tmp .. '/swap//'
+  vim.opt.backupdir = nvim_tmp .. '/backup//'
+  vim.opt.shadafile = nvim_tmp .. '/shada/main.shada'
+  -- The LSP log receives pyrefly's stderr on every message; keep it off NFS.
+  -- _set_filename is a private API (added in nvim 0.12), guarded for other versions.
+  if vim.lsp.log and vim.lsp.log._set_filename then
+    vim.lsp.log._set_filename(nvim_tmp .. '/lsp.log')
+  end
+end
+
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
 vim.opt.smartcase = true

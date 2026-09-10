@@ -230,21 +230,23 @@ return {
           },
         },
 
-        basedpyright = {
-          settings = {
-            basedpyright = {
-              disableOrganizeImports = true,
-            },
-            typeCheckingMode = 'standard',
-            python = {
-              -- pythonPath = vim.fn.trim(vim.fn.system 'pixi run which python'),
-              analysis = {
-                -- Ignore all files for analysis to exclusively use Ruff for linting
-                ignore = { '*' },
-              },
-            },
+        pyrefly = {
+  cmd = { 'pyrefly', 'lsp' },
+  filetypes = { 'python' },
+  root_markers = {
+    'pyrefly.toml',
+    'pyproject.toml',
+    'pixi.toml',
+    'setup.py',
+    'setup.cfg',
+    'requirements.txt',
+    'Pipfile',
+    '.git'
           },
-        },
+  settings = {
+    -- Put actual pyrefly-specific settings here if needed
+  },
+},
 
         lua_ls = {
           -- cmd = { ... },
