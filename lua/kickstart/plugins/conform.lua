@@ -7,7 +7,7 @@ return {
       {
         '<leader>f',
         function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
+          require('conform').format { async = true, lsp_format = 'fallback', timeout_ms = 3000 }
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -24,7 +24,9 @@ return {
           return nil
         else
           return {
-            timeout_ms = 500,
+            -- Prettier (Node.js) needs more headroom than fast native
+            -- formatters, especially on network filesystems.
+            timeout_ms = 3000,
             lsp_format = 'fallback',
           }
         end
