@@ -247,7 +247,7 @@ return {
       --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = { 'ruff', 'pyrefly', 'lua_ls', 'stylua' }
+      local ensure_installed = { 'ruff', 'pyrefly', 'lua_ls', 'stylua', 'prettier' }
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {

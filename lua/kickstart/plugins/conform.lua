@@ -31,11 +31,22 @@ return {
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        -- Covers `.qmd` too, since it is mapped to the markdown filetype.
+        -- Prettier formats the markdown structure and leaves embedded
+        -- chunk contents (```{r}, ```sh, ...) untouched.
+        markdown = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      },
+      formatters = {
+        prettier = {
+          -- Prettier cannot infer a parser from the `.qmd` extension and
+          -- errors out; force the markdown parser for Quarto files.
+          options = { ext_parsers = { qmd = 'markdown' } },
+        },
       },
     },
   },
