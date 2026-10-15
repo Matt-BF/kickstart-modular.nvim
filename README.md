@@ -12,6 +12,28 @@ A starting point for Neovim that is:
 
 **NOT** a Neovim distribution, but instead a starting point for your configuration.
 
+## Installing this fork
+
+This is the personal configuration used on the JGI cluster (see `git log` for
+the customization history). To reproduce it on a new machine:
+
+1. Install a recent Neovim (0.12+ — the treesitter config uses the
+   `nvim-treesitter` `main` branch, which needs a current build), plus `git`,
+   a C compiler, and `ripgrep`.
+2. Clone this repo as the Neovim config:
+
+   ```sh
+   git clone git@github.com:Matt-BF/kickstart-modular.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+   ```
+
+3. Start `nvim`. On first launch lazy.nvim bootstraps itself, installs every
+   plugin at the commit pinned in `lazy-lock.json`, and the treesitter config
+   installs its parsers (including the pinned `nextflow` grammar). Reopen
+   nvim once that finishes.
+
+To move the plugin set forward later, run `:Lazy update` and commit the
+resulting `lazy-lock.json` change.
+
 ## Installation
 
 ### Install Neovim
