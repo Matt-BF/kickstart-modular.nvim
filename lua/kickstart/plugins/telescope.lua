@@ -108,6 +108,26 @@ return {
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- Search the whole project rather than nvim's working directory (which
+      -- is wherever nvim happened to be launched). The project root is the
+      -- nearest ancestor of the current file containing a root marker.
+      local function project_root()
+        local markers = { '.git', '_quarto.yml', 'AGENTS.md', 'pyproject.toml', 'nextflow.config' }
+        return vim.fs.root(vim.api.nvim_buf_get_name(0), markers) or vim.uv.cwd()
+      end
+      vim.keymap.set('n', '<leader>sp', function()
+        builtin.find_files {
+          cwd = project_root(),
+          prompt_title = 'Project files',
+        }
+      end, { desc = '[S]earch [P]roject files' })
+      vim.keymap.set('n', '<leader>sP', function()
+        builtin.live_grep {
+          cwd = project_root(),
+          prompt_title = 'Project grep',
+        }
+      end, { desc = '[S]earch [P]roject by grep' })
     end,
   },
 }
